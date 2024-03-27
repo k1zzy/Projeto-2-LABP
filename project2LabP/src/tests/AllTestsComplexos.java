@@ -4,9 +4,10 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({  
+@SuiteClasses({
+				ComplexoTestConjugado.class,
 				ComplexoTestEhIgual.class,
-				ComplexoTestEhReal.class,
+	            ComplexoTestEhReal.class,
 				ComplexoTestEhZero.class,
 				ComplexoTestIm.class,
 				ComplexoTestNorma.class,

@@ -52,7 +52,6 @@ public class PolinomioTestesToString {
         assertEquals(esperado,obtido);
     }
 
-
     @Test(timeout = 10000)
     public void teste5 () {
         Complexo[] coefs= new ComplexoConcreto[2];
@@ -99,7 +98,7 @@ public class PolinomioTestesToString {
         assertEquals(esperado,obtido);
     }
 
-   @Test(timeout = 10000)
+    @Test(timeout = 10000)
     public void teste9 () {
         Complexo[] coefs= new ComplexoConcreto[1];
         coefs[0] = new ComplexoConcreto(-2,0);
@@ -108,8 +107,7 @@ public class PolinomioTestesToString {
         obtido = p1.toString();
         assertEquals(esperado,obtido);
     }
-
-
+    
     @Test(timeout = 10000)
     public void poliMix () {
         Complexo[] coefs= new ComplexoConcreto[5];
