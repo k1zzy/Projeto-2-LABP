@@ -1,8 +1,14 @@
 package project;
 
-public class PolinomioVetor implements Polinomio {
+/**
+ * Classe que representa um polinomio de numeros complexos num vetor.
+ * 
+ * @author Rodrigo Afonso (61839)
+ * @version 1.0
+ */
+public final class PolinomioVetor implements Polinomio {
 
-	public PolinomioVetor() {
+	public PolinomioVetor(Complexo[] coefs) {
 		// TODO Auto-generated constructor stub
 	}
 
