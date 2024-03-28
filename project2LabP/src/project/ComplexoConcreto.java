@@ -114,4 +114,12 @@ public final class ComplexoConcreto implements Complexo {
 	public String repTrigonometrica() {
 		return norma + " cis (" + theta + ")"; // norma * (cis theta)
 	}
+
+	public Complexo simetrico() {
+        return new ComplexoConcreto(-re, -im);
+	}
+	
+	public Complexo subtraccao(Complexo outro) {
+		return new ComplexoConcreto(re - outro.re(), im - outro.im());
+	}
 }
