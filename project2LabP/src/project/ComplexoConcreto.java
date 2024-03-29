@@ -45,23 +45,30 @@ public final class ComplexoConcreto implements Complexo {
 	}
 
 	@Override
-	public Complexo soma(Complexo outro) { // (a + bi) + (c + di) = (a + c) + (b + d)i (so juntar as partes reais e imaginarias respectivamente)
+	public Complexo soma(Complexo outro) {
+		// (a + bi) + (c + di) = (a + c) + (b + d)i (so juntar as partes reais e imaginarias respectivamente)
 		return new ComplexoConcreto(re + outro.re(), im + outro.im());
 	}
 
 	@Override
-	public Complexo produto(Complexo outro) { // (a + bi) * (c + di) = (ac - bd) + (ad + bc)i (distributiva e i^2 = -1)
+	public Complexo produto(Complexo outro) {
+		// (a + bi) * (c + di) = (ac - bd) + (ad + bc)i (distributiva e i^2 = -1)
 		return new ComplexoConcreto(re * outro.re() - im * outro.im(), re * outro.im() + im * outro.re());
 	}
-
+	
+	// TODO mesma coisa que em baixo
 	@Override
-	public Complexo potencia(double x) { // formula de Moivre: norma^x * (cos(x * theta) + i * sin(x * theta))
+	public Complexo potencia(double x) {
+		// formula de Moivre: norma^x * (cos(x * theta) + i * sin(x * theta))
 		return new ComplexoConcreto(Math.pow(norma, x) * Math.cos(theta * x),
 									Math.pow(norma, x) * Math.sin(theta * x));
 	}
-
+	
+	//TODO pode dar mal na subtracao dos tetas tenho que ver se fica sempre no intervalo certo, mas acho que nao ha problema visto
+	// que irao entrar como angulos no sin e cos e depois no novo complexo voltam a estar no intervalo certo
 	@Override
-	public Complexo quociente(Complexo outro) { //formula da divisao de complexos na forma trigonometrica: dividir as normas e subtrair os tetas
+	public Complexo quociente(Complexo outro) {
+		//formula da divisao de complexos na forma trigonometrica: dividir as normas e subtrair os tetas
 		return new ComplexoConcreto((norma / outro.norma()) * Math.cos(theta - outro.theta()),
 									(norma / outro.norma()) * Math.sin(theta - outro.theta())); 
 	}
@@ -73,12 +80,14 @@ public final class ComplexoConcreto implements Complexo {
 
 	@Override
 	public boolean ehReal() {
-		return im <= Complexo.getErro() && im >= -Complexo.getErro(); // se a parte imaginaria for menor que o erro, o numero eh real
+		// se a parte imaginaria for menor 0 (entre o erro) e a parte real for maior que 0, o complexo eh real
+		return re >= Complexo.getErro() && im <= Complexo.getErro() && im >= -Complexo.getErro();
 	}
 
 	@Override
 	public boolean ehReal(double erro) {
-		return im <= erro && im >= -erro; // se a parte imaginaria for menor que o erro, o numero eh real
+		// se a parte imaginaria for menor 0 (entre o erro) e a parte real for maior que 0, o complexo eh real
+		return re >= erro && im <= erro && im >= -erro;
 	}
 
 	@Override
@@ -106,13 +115,22 @@ public final class ComplexoConcreto implements Complexo {
 	}
 
 	@Override
-	public String toString() {
-		return im >= 0 ? re + " + " + im + "i" : re + " - " + (-im) + "i"; // se a parte imaginaria for positiva, adicionar um sinal de mais
+	public String toString() {		
+		if (ehZero()) // quando eh 0
+			return "0.0"; // imprime 0.0 pq eh assim que ta nos testes
+		else if (ehReal()) // se for real
+			return re >= Complexo.getErro() ? Double.toString(re): "- " + -re; // imprime so a parte real
+		else if (ehImaginario()) // se for imaginario
+			return im >= Complexo.getErro() ? im + "i": "- " + -im; // imprime so a parte imaginaria
+		else if (re >= Complexo.getErro()) // se a parte real for positiva
+			return im >= Complexo.getErro() ? re + " + " + im + "i" : re + " - " + -im + "i"; // a parte imaginaria ou eh positiva ou negativa
+		else // se a parte real for negativa
+			return im >= Complexo.getErro() ? "- " + -re + " + " + im + "i" : "- " + -re + " - " + -im + "i" ; // a parte imaginaria sera negativa
 	}
 	
 	@Override
 	public String repTrigonometrica() {
-		return norma + " cis (" + theta + ")"; // norma * (cis theta)
+		return !ehZero() ? norma + " cis (" + theta + ")" : "0.0"; // norma * (cis theta)
 	}
 
 	public Complexo simetrico() {
@@ -121,5 +139,10 @@ public final class ComplexoConcreto implements Complexo {
 	
 	public Complexo subtraccao(Complexo outro) {
 		return new ComplexoConcreto(re - outro.re(), im - outro.im());
+	}
+	
+	private boolean ehImaginario() {
+		// se a parte real for menor 0 (entre o erro) e a parte imaginaria for maior que 0, o complexo eh imaginario
+		return im >= Complexo.getErro() && re <= Complexo.getErro() && re >= -Complexo.getErro();
 	}
 }

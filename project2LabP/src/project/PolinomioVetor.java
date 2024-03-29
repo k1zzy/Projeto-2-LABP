@@ -68,77 +68,61 @@ public final class PolinomioVetor implements Polinomio {
 		return new PolinomioVetor(coefsSimetrico); // retorna um novo polinomio com os coeficientes simetricos
 	}
 	
-	// TODO METER TUDO NUM SO LOOP E DEIXAR DE SER BURRO
 	@Override
 	public Polinomio soma(Polinomio p) {
-		Complexo[] coefsSoma = new Complexo[Math.max(this.grau(), p.grau())]; // cria um vetor com o tamanho do polinomio com maior grau
-		if (p.grau() != this.grau()) { // se os polinomios tiverem graus diferentes
-			for (int i = 0; i < Math.min(this.grau(), p.grau()); i++) { // percorre o vetor com o tamanho do polinomio com menor grau
-				coefsSoma[i] = this.coef(i).soma(p.coef(i));
-			}
-			
-			if (this.grau() > p.grau()) { // e depois dependendo do polinomio com maior grau
-				for (int i = p.grau() + 1; i <= this.grau(); i++) { // coloca os complexos que sobram no vetor
-					coefsSoma[i] = this.coef(i);
+		char grauMaior = grau() >= p.grau() ? 'a' : 'p'; // 'a' = atual, 'p' = p
+   		Complexo[] coefsSoma = new Complexo[Math.max(grau(), p.grau()) + 1]; // cria um vetor com o tamanho do polinomio com maior grau
+		
+		for (int i = 0; i <= Math.max(grau(), p.grau()); i++) { // percorre ate a maior posicao do polinomio com maior grau
+			if (i <= grau() && i <= p.grau()) // se o i for igual ou menor que o grau
+				coefsSoma[i] = this.coef(i).soma(p.coef(i)); // fazer normalmente a soma
+			else { 
+				switch (grauMaior) { // caso contrario ir verificar se
+				case 'a': // o atual eh o de maior grau
+					coefsSoma[i] = this.coef(i); // e colocar esse na posicao i
+					break;
+				case 'p': // ou se o p eh o de maior grau
+					coefsSoma[i] = p.coef(i); // e colocar esse na posicao i
+					break;
 				}
-			} else {
-				for (int i = this.grau() + 1; i <= p.grau(); i++) {
-					coefsSoma[i] = p.coef(i);
-				}
-			}
-		} else { // se os polinomios tiverem o mesmo grau
-			for (int i = 0; i < this.grau(); i++) { // apenas soma cada membro dos polinomios
-				coefsSoma[i] = this.coef(i).soma(p.coef(i));
 			}
 		}
 		return new PolinomioVetor(coefsSoma);
 	}
-
+	
+	// pode acontecer no caso de se subtrair dois monomios iguais e esse ser o ultimo ficar com o ultimo monomio a 0 o que nao pode acontecer
 	@Override
 	public Polinomio subtraccao(Polinomio p) {
-		Complexo[] coefsSub = new Complexo[Math.max(this.grau(), p.grau()) + 1]; // cria um vetor com o tamanho do polinomio com maior grau
-		if (p.grau() != this.grau()) { // se os polinomios tiverem graus diferentes
-			for (int i = 0; i < Math.min(this.grau(), p.grau()); i++) { // percorre o vetor com o tamanho do polinomio com menor grau
-				coefsSub[i] = ((ComplexoConcreto) this.coef(i)).subtraccao(p.coef(i));
-			}
-			
-			if (this.grau() > p.grau()) { // e depois dependendo do polinomio com maior grau
-				for (int i = p.grau() + 1; i <= this.grau(); i++) { // coloca os complexos que sobram no vetor
-					coefsSub[i] = ((ComplexoConcreto) p.coef(i)).simetrico();
+		char grauMaior = grau() >= p.grau() ? 'a' : 'p'; // 'a' = atual, 'p' = p
+   		Complexo[] coefsSub = new Complexo[Math.max(grau(), p.grau()) + 1]; // cria um vetor com o tamanho do polinomio com maior grau
+		
+		for (int i = 0; i <= Math.max(grau(), p.grau()); i++) { // percorre ate a maior posicao do polinomio com maior grau
+			if (i <= grau() && i <= p.grau()) // se o i for igual ou menor que o grau
+				coefsSub[i] = ((ComplexoConcreto) this.coef(i)).subtraccao(p.coef(i)); // fazer normalmente a subtraccao
+			else { 
+				switch (grauMaior) { // caso contrario ir verificar se
+				case 'a': // o atual eh o de maior grau
+					coefsSub[i] = this.coef(i); // e colocar esse na posicao i
+					break;
+				case 'p': // ou se o p eh o de maior grau
+					coefsSub[i] = ((ComplexoConcreto) p.coef(i)).simetrico(); // e colocar o seu simetrico na posicao i
+					break;
 				}
-			} else {
-				for (int i = this.grau() + 1; i <= p.grau(); i++) {
-					coefsSub[i] = ((ComplexoConcreto) p.coef(i)).simetrico();
-				}
-			}
-		} else { // se os polinomios tiverem o mesmo grau
-			for (int i = 0; i < this.grau(); i++) { // apenas soma cada membro dos polinomios
-				coefsSub[i] = ((ComplexoConcreto) this.coef(i)).subtraccao(p.coef(i));
 			}
 		}
 		return new PolinomioVetor(coefsSub);
 	}
-
+	
+	//TODO ta complicado mais logo logo volto a isto
 	@Override
 	public Polinomio produto(Polinomio p) {
-		Complexo[] coefsProd = new Complexo[this.grau() + p.grau() + 1]; // cria um vetor com o tamanho da soma dos graus dos polinomios
-		if (p.grau() != this.grau()) { // se os polinomios tiverem graus diferentes
-			for (int i = 0; i < Math.min(this.grau(), p.grau()); i++) { // percorre o vetor com o tamanho do polinomio com menor grau
-				coefsProd[i] = this.coef(i).produto(p.coef(i));
-			}
-			
-			if (this.grau() > p.grau()) { // e depois dependendo do polinomio com maior grau
-				for (int i = p.grau() + 1; i <= this.grau(); i++) { // coloca os complexos que sobram no vetor
-					coefsProd[i] = new ComplexoConcreto(0, 0);
-				}
-			} else {
-				for (int i = this.grau() + 1; i <= p.grau(); i++) {
-					coefsProd[i] = new ComplexoConcreto(0, 0);
-				}
-			}
-		} else { // se os polinomios tiverem o mesmo grau
-			for (int i = 0; i < this.grau(); i++) { // apenas soma cada membro dos polinomios
-				coefsProd[i] = this.coef(i).produto(p.coef(i));
+   		Complexo[] coefsProd = new Complexo[grau() + p.grau() + 1]; // cria um vetor com tamanho da soma dos graus dos dois polimonios
+		for (int i = 0; i <= grau(); i++) { // percorre ate a maior posicao do polinomio com maior grau
+			for (int j = 0 ; i <= p.grau(); i++) {
+				if (i != 0)
+					coefsProd[i + j] = coefsProd[i + j].soma(coef(i).produto(p.coef(j)));
+				else
+					coefsProd[i + j] = coef(i).produto(p.coef(j));
 			}
 		}
 		return new PolinomioVetor(coefsProd);
@@ -179,6 +163,24 @@ public final class PolinomioVetor implements Polinomio {
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		int grau = grau() + 1;
+		for (Complexo c : coefs) {
+			if(c == null)
+				sb.append(0.0);
+			else {
+				sb.append(c.repTrigonometrica());
+				grau--;
+			}
+			
+			if (grau != 0)
+				sb.append(" x^" + grau + " + ");
+		}
+		return sb.toString();
 	}
 
 }
