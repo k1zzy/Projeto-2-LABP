@@ -1,5 +1,7 @@
 package project;
 
+import java.util.Arrays;
+
 /**
  * Classe que representa um polinomio de numeros complexos num vetor.
  * 
@@ -113,16 +115,24 @@ public final class PolinomioVetor implements Polinomio {
 		return new PolinomioVetor(coefsSub);
 	}
 	
-	//TODO ta complicado mais logo logo volto a isto
 	@Override
 	public Polinomio produto(Polinomio p) {
-   		Complexo[] coefsProd = new Complexo[grau() + p.grau() + 1]; // cria um vetor com tamanho da soma dos graus dos dois polimonios
-		for (int i = 0; i <= grau(); i++) { // percorre ate a maior posicao do polinomio com maior grau
-			for (int j = 0 ; i <= p.grau(); i++) {
-				if (i != 0)
-					coefsProd[i + j] = coefsProd[i + j].soma(coef(i).produto(p.coef(j)));
-				else
-					coefsProd[i + j] = coef(i).produto(p.coef(j));
+   		Complexo[] coefsProd = new Complexo[grau() + p.grau() + 1]; // cria um vetor com tamanho da soma dos graus dos dois polimonios +1
+   		boolean ehPrimeiraPos = true; // se estamos na primeira pos do polinomio
+   		int skippedPos = 0; // n de vezes que apagamos uma pos da array por ser 0 na primeira pos
+		for (int i = 0; i <= this.grau(); i++) { // percorre ate a maior posicao do polinomio atual
+			for (int j = 0 ; j <= p.grau(); j++) {
+				// se for a primeira vez a passar na array coefsProd estara a null, encher de complexos 0
+				if (coefsProd[i + j - skippedPos] == null)
+					coefsProd[i + j - skippedPos] = new ComplexoConcreto(0, 0);
+				coefsProd[i + j - skippedPos] = coefsProd[i + j - skippedPos].soma(this.coef(i).produto(p.coef(j)));
+				// se o produto for 0, se estiver na primeira pos da array e se nao for de grau 0
+				if (coefsProd[i + j - skippedPos].ehZero() && ehPrimeiraPos && coefsProd.length != 1) {
+					reverseArray(coefsProd); // reverte a array
+					coefsProd = Arrays.copyOf(coefsProd, coefsProd.length - 1); // apaga a ultima pos
+					skippedPos++; // incrementra o numero de pos apagadas
+				} else
+					ehPrimeiraPos = false;
 			}
 		}
 		return new PolinomioVetor(coefsProd);
@@ -170,17 +180,24 @@ public final class PolinomioVetor implements Polinomio {
 		StringBuilder sb = new StringBuilder();
 		int grau = grau() + 1;
 		for (Complexo c : coefs) {
-			if(c == null)
+			if (c == null || c.ehZero())
 				sb.append(0.0);
 			else {
 				sb.append(c.repTrigonometrica());
 				grau--;
 			}
-			
 			if (grau != 0)
 				sb.append(" x^" + grau + " + ");
 		}
 		return sb.toString();
+	}
+	
+	private void reverseArray(Complexo[] array) {
+	    for (int i = 0; i < array.length / 2; i++) {
+	        Complexo temp = array[i];
+	        array[i] = array[array.length - 1 - i];
+	        array[array.length - 1 - i] = temp;
+	    }
 	}
 
 }
