@@ -54,9 +54,9 @@ public final class PolinomioVetor implements Polinomio {
 
 	@Override
 	public Polinomio escalar(Complexo f) {
-		Complexo[] coefsEscalar = new Complexo[this.coefs.length]; //vetor que vai conter os coeficientes do polinomio multiplicados pelo escalar
+		Complexo[] coefsEscalar = new Complexo[coefs.length]; //vetor que vai conter os coeficientes do polinomio multiplicados pelo escalar
 		for (int i = 0; i < coefs.length; i++) {
-			coefsEscalar[i] = this.coefs[i].produto(f); //multiplica cada coeficiente pelo escalar e coloca-lo no vetor coefsEscalar
+			coefsEscalar[i] = this.coef(i).produto(f); //multiplica cada coeficiente pelo escalar e coloca-lo no vetor coefsEscalar
 		}
 		return new PolinomioVetor(coefsEscalar); //retorna um novo polinomio com os coeficientes multiplicados pelo escalar
 	}
@@ -128,8 +128,7 @@ public final class PolinomioVetor implements Polinomio {
 				coefsProd[i + j - skippedPos] = coefsProd[i + j - skippedPos].soma(this.coef(i).produto(p.coef(j)));
 				// se o produto for 0, se estiver na primeira pos da array e se nao for de grau 0
 				if (coefsProd[i + j - skippedPos].ehZero() && ehPrimeiraPos && coefsProd.length != 1) {
-					reverseArray(coefsProd); // reverte a array
-					coefsProd = Arrays.copyOf(coefsProd, coefsProd.length - 1); // apaga a ultima pos
+					arrayDelFirstPos(coefsProd); // apaga a primeira pos
 					skippedPos++; // incrementra o numero de pos apagadas
 				} else
 					ehPrimeiraPos = false;
@@ -140,14 +139,27 @@ public final class PolinomioVetor implements Polinomio {
 
 	@Override
 	public Complexo avalia(Complexo x) {
-		// TODO Auto-generated method stub
-		return null;
+		Complexo sol = new ComplexoConcreto(0, 0);;
+		for (int i = this.grau(); i >= 0; i--) {
+			// o que esta la dentro + o produto do coef com o X^grau correspondente)
+			sol = sol.soma(this.coef(i).produto(x.potencia(i)));
+		}
+		return sol;
 	}
 
 	@Override
 	public Polinomio derivada() {
-		// TODO Auto-generated method stub
-		return null;
+		Complexo[] der = new Complexo[coefs.length];
+		if (coefs.length > 1) {
+			der = Arrays.copyOf(coefs, coefs.length - 1);
+			for(int i = this.grau(); i >= 0; i--) {
+				der[i] = der[i].produto(new ComplexoConcreto(i, i));
+			}
+		} else {
+			arrayDelFirstPos(der);
+			return new PolinomioVetor(der);
+		}
+		return new PolinomioVetor(der);
 	}
 
 	@Override
@@ -192,12 +204,10 @@ public final class PolinomioVetor implements Polinomio {
 		return sb.toString();
 	}
 	
-	private void reverseArray(Complexo[] array) {
-	    for (int i = 0; i < array.length / 2; i++) {
-	        Complexo temp = array[i];
-	        array[i] = array[array.length - 1 - i];
-	        array[array.length - 1 - i] = temp;
-	    }
+	private void arrayDelFirstPos(Complexo[] array) {
+		if (array.length > 1)
+		    array = Arrays.copyOf(array, array.length -1);
+		array[0] = new ComplexoConcreto(0, 0);
 	}
 
 }

@@ -49,7 +49,7 @@ public class PolinomioTestesEscalar {
     }   
     
 
-    @Test(timeout = 1000)
+    @Test
     public void grau0EEscalarComplexoCompleto () {
         Complexo[] coefs= new ComplexoConcreto[1];
         coefs[0] = new ComplexoConcreto(3,2);

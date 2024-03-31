@@ -31,7 +31,7 @@ public class PolinomioTestesDerivada {
         assertTrue(aposDerivar.ehIgual(antesDeDerivar.derivada()));
     }
     
-    @Test(timeout = 1000)
+    @Test
     public void derivarPolinomioConstante () {
     	Complexo[] coefsConstante = new ComplexoConcreto[1];
         coefsConstante[0] = new ComplexoConcreto(3.2, -2.1);

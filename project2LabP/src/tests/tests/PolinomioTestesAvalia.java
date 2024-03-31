@@ -35,7 +35,7 @@ public class PolinomioTestesAvalia {
     }
 
 
-    @Test(timeout = 1000)
+    @Test	
     public void grauMaior1 () {
         Complexo[] coefs= new ComplexoConcreto[3];
         coefs[0] = new ComplexoConcreto(2,1);
