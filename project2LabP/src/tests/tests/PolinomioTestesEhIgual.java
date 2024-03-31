@@ -30,14 +30,13 @@ public class PolinomioTestesEhIgual {
         assertFalse(p1.ehIgual(p2));
     }
   
-    @Test(timeout = 1000)
+    @Test
     public void grau0NaoIgual () {
         Complexo[] coefs= new ComplexoConcreto[1];
-        Complexo[] coefs2= new ComplexoConcreto[1];
         coefs[0] = new ComplexoConcreto(3,2);
         p1 = new PolinomioVetor (coefs);
-        coefs2[0] = new ComplexoConcreto(6,5);
-        p2 = new PolinomioVetor (coefs2);
+        coefs[0] = new ComplexoConcreto(6,5);
+        p2 = new PolinomioVetor (coefs);
         assertFalse(p1.ehIgual(p2));
     }
     

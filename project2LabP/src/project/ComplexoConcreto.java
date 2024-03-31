@@ -7,10 +7,10 @@ package project;
  * @version 1.0
  */
 public final class ComplexoConcreto implements Complexo {
-	final double re;
-	final double im;
-	final double norma;
-	final double theta;
+	private final double re;
+	private final double im;
+	private final double norma;
+	private final double theta;
 	
 	public ComplexoConcreto(double re, double im) {
 		this.re = re;
@@ -56,7 +56,6 @@ public final class ComplexoConcreto implements Complexo {
 		return new ComplexoConcreto(re * outro.re() - im * outro.im(), re * outro.im() + im * outro.re());
 	}
 	
-	// TODO mesma coisa que em baixo
 	@Override
 	public Complexo potencia(double x) {
 		// formula de Moivre: norma^x * (cos(x * theta) + i * sin(x * theta))
@@ -64,8 +63,6 @@ public final class ComplexoConcreto implements Complexo {
 									Math.pow(norma, x) * Math.sin(theta * x));
 	}
 	
-	//TODO pode dar mal na subtracao dos tetas tenho que ver se fica sempre no intervalo certo, mas acho que nao ha problema visto
-	// que irao entrar como angulos no sin e cos e depois no novo complexo voltam a estar no intervalo certo
 	@Override
 	public Complexo quociente(Complexo outro) {
 		//formula da divisao de complexos na forma trigonometrica: dividir as normas e subtrair os tetas

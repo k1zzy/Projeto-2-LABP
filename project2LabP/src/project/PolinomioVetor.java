@@ -9,8 +9,8 @@ import java.util.Arrays;
  * @version 1.0
  */
 public final class PolinomioVetor implements Polinomio {
-	final int grau;
-	final Complexo[] coefs;
+	private final int grau;
+	private final Complexo[] coefs;
 
 	public PolinomioVetor(Complexo[] coefs) {
 		this.coefs = coefs;
