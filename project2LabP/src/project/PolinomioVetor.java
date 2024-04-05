@@ -12,21 +12,35 @@ public final class PolinomioVetor implements Polinomio {
 	private final int grau;
 	private final Complexo[] coefs;
 
+	/**
+	 * Construtor de um polinomio apartir de vetores.
+	 * O(n)
+	 * @param coefs vetor de coeficientes do tipo Complexo
+	 */
 	public PolinomioVetor(Complexo[] coefs) {
 		this.coefs = Arrays.copyOf(coefs, coefs.length);
 		this.grau = coefs.length - 1; //o grau do polinomio sera sempre o tamanho do vetor - 1
  	}
 
+	/**
+	 * O(1)
+	 */
 	@Override
 	public int grau() {
 		return grau;
 	}
 
+	/**
+	 * O(1)
+	 */
 	@Override
 	public Complexo coef(int i) {
 		return coefs[i]; //retorna o coeficiente de indice i ou seja o coeficiente de grau i
 	}
 
+	/**
+	 * O(1)
+	 */
 	@Override
 	public boolean ehZero() {
 		for (Complexo c : coefs) {
@@ -37,6 +51,9 @@ public final class PolinomioVetor implements Polinomio {
 		return true;
 	}
 
+	/**
+	 * O(n)
+	 */
 	@Override
 	public boolean ehZero(double erro) {
 		for (Complexo c : coefs) {
@@ -47,11 +64,17 @@ public final class PolinomioVetor implements Polinomio {
 		return true;
 	}
 
+	/**
+	 * O(1)
+	 */
 	@Override
 	public boolean ehConstante() {
 		return grau == 0;
 	}
 
+	/**
+	 * O(n)
+	 */
 	@Override
 	public Polinomio escalar(Complexo f) {
 		Complexo[] coefsEscalar = new Complexo[coefs.length]; //vetor que vai conter os coeficientes do polinomio multiplicados pelo escalar
@@ -61,6 +84,9 @@ public final class PolinomioVetor implements Polinomio {
 		return new PolinomioVetor(coefsEscalar); //retorna um novo polinomio com os coeficientes multiplicados pelo escalar
 	}
 
+	/**
+	 * O(n)
+	 */
 	@Override
 	public Polinomio simetrico() {
 		Complexo[] coefsSimetrico = new Complexo[this.coefs.length]; // vetor que vai conter os coeficientes do polinomio simetrico
@@ -70,6 +96,9 @@ public final class PolinomioVetor implements Polinomio {
 		return new PolinomioVetor(coefsSimetrico); // retorna um novo polinomio com os coeficientes simetricos
 	}
 	
+	/**
+	 * O(n)
+	 */
 	@Override
 	public Polinomio soma(Polinomio p) {
 		char grauMaior = grau() >= p.grau() ? 'a' : 'p'; // 'a' = atual, 'p' = p
@@ -110,6 +139,9 @@ public final class PolinomioVetor implements Polinomio {
 	
 	// TODO pode acontecer no caso de se subtrair dois monomios iguais e esse ser o ultimo ficar com o ultimo monomio a 0 o que nao pode acontecer
 	// corrigido (provavelmente horivel mas funciona)
+	/**
+	 * O(n)
+	 */
 	@Override
 	public Polinomio subtraccao(Polinomio p) {
 		char grauMaior = grau() >= p.grau() ? 'a' : 'p'; // 'a' = atual, 'p' = p
@@ -149,6 +181,9 @@ public final class PolinomioVetor implements Polinomio {
 		return new PolinomioVetor(coefsSub);
 	}
 	
+	/**
+	 * O(n^2)
+	 */
 	@Override
 	public Polinomio produto(Polinomio p) {
    		Complexo[] coefsProd = new Complexo[grau() + p.grau() + 1]; // cria um vetor com tamanho da soma dos graus dos dois polimonios +1
@@ -172,6 +207,9 @@ public final class PolinomioVetor implements Polinomio {
 		return new PolinomioVetor(coefsProd);
 	}
 
+	/**
+	 * O(n)
+	 */
 	@Override
 	public Complexo avalia(Complexo x) {
 		Complexo sol = new ComplexoConcreto(0, 0);;
@@ -182,6 +220,9 @@ public final class PolinomioVetor implements Polinomio {
 		return sol;
 	}
 
+	/**
+	 * O(n)
+	 */
 	@Override
 	public Polinomio derivada() {
 		Complexo[] der = Arrays.copyOf(coefs, coefs.length); // copia do vetor de coeficientes
@@ -197,11 +238,17 @@ public final class PolinomioVetor implements Polinomio {
 		return new PolinomioVetor(der);
 	}
 
+	/**
+	 * O(1)
+	 */
 	@Override
 	public Polinomio copia() {
 		return new PolinomioVetor(this.coefs);
 	}
 
+	/**
+	 * O(n)
+	 */
 	@Override
 	public boolean ehIgual(Polinomio p) {
 		for (int i = 0; i < coefs.length; i++) {
@@ -212,6 +259,9 @@ public final class PolinomioVetor implements Polinomio {
 		return true;
 	}
 
+	/**
+	 * O(n)
+	 */	
 	@Override
 	public boolean ehIgual(Polinomio p, double erro) {
 		for (int i = 0; i < coefs.length; i++) {
@@ -222,6 +272,9 @@ public final class PolinomioVetor implements Polinomio {
 		return true;
 	}
 	
+	/**
+	 * O(n)
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -241,7 +294,15 @@ public final class PolinomioVetor implements Polinomio {
 		}
 		return sb.toString();
 	}
-	// requires: array != null
+
+	/**
+	 * Apaga a primeira posicao de um vetor de complexos.
+	 * O(n)
+	 * @param array vetor de complexos
+	 * @requires array != null
+	 * @return vetor sem a primeira posicao
+	 */
+	// 
 	private Complexo[] arrayDelFirstPos(Complexo[] array) {
 		Complexo[] delArray = new Complexo[array.length - 1];
 		for (int i = 0; i < array.length-1; i++) {
