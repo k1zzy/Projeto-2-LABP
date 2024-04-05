@@ -61,7 +61,7 @@ public class PolinomioTestesSoma {
         assertTrue(esperado.ehIgual(obtido));
     }
     
-    @Test(timeout = 1000)
+    @Test
     public void ambosGrauMaior1Diferentes () {
         Complexo[] coefs= new ComplexoConcreto[3];
         

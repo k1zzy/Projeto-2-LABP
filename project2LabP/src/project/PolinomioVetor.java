@@ -13,7 +13,7 @@ public final class PolinomioVetor implements Polinomio {
 	private final Complexo[] coefs;
 
 	public PolinomioVetor(Complexo[] coefs) {
-		this.coefs = coefs;
+		this.coefs = Arrays.copyOf(coefs, coefs.length);
 		this.grau = coefs.length - 1; //o grau do polinomio sera sempre o tamanho do vetor - 1
  	}
 
@@ -74,44 +74,78 @@ public final class PolinomioVetor implements Polinomio {
 	public Polinomio soma(Polinomio p) {
 		char grauMaior = grau() >= p.grau() ? 'a' : 'p'; // 'a' = atual, 'p' = p
    		Complexo[] coefsSoma = new Complexo[Math.max(grau(), p.grau()) + 1]; // cria um vetor com o tamanho do polinomio com maior grau
-		
-		for (int i = 0; i <= Math.max(grau(), p.grau()); i++) { // percorre ate a maior posicao do polinomio com maior grau
-			if (i <= grau() && i <= p.grau()) // se o i for igual ou menor que o grau
+   		boolean ehPrimeiraPos = true; // se estamos na primeira pos do polinomio
+   		int skippedPos = 0; // n de vezes que apagamos uma pos da array por ser 0 na primeira pos
+   		
+		for (int i = Math.max(grau(), p.grau()); i >= 0; i--) { // percorre ate a maior posicao do polinomio com maior grau
+			if (i <= grau() && i <= p.grau()) { // se o i for igual ou menor que o grau
 				coefsSoma[i] = this.coef(i).soma(p.coef(i)); // fazer normalmente a soma
-			else { 
+				if((coefsSoma[i].ehZero() || coefsSoma[i] == null)  && ehPrimeiraPos)
+	                skippedPos++; // incrementra o numero de pos apagadas
+	            else
+	                ehPrimeiraPos = false;
+			} else { 
 				switch (grauMaior) { // caso contrario ir verificar se
 				case 'a': // o atual eh o de maior grau
 					coefsSoma[i] = this.coef(i); // e colocar esse na posicao i
+					if((coefsSoma[i].ehZero() || coefsSoma[i] == null)  && ehPrimeiraPos)
+		                skippedPos++; // incrementra o numero de pos apagadas
+		            else
+		                ehPrimeiraPos = false;
 					break;
 				case 'p': // ou se o p eh o de maior grau
 					coefsSoma[i] = p.coef(i); // e colocar esse na posicao i
+					if((coefsSoma[i].ehZero() || coefsSoma[i] == null)  && ehPrimeiraPos)
+		                skippedPos++; // incrementra o numero de pos apagadas
+		            else
+		                ehPrimeiraPos = false;
 					break;
 				}
 			}
 		}
+		if (skippedPos > 0)
+			coefsSoma = Arrays.copyOf(coefsSoma, coefsSoma.length-skippedPos+1); // apagar as primeiras pos da array que sao 0
 		return new PolinomioVetor(coefsSoma);
 	}
 	
-	// pode acontecer no caso de se subtrair dois monomios iguais e esse ser o ultimo ficar com o ultimo monomio a 0 o que nao pode acontecer
+	// TODO pode acontecer no caso de se subtrair dois monomios iguais e esse ser o ultimo ficar com o ultimo monomio a 0 o que nao pode acontecer
+	// corrigido (provavelmente horivel mas funciona)
 	@Override
 	public Polinomio subtraccao(Polinomio p) {
 		char grauMaior = grau() >= p.grau() ? 'a' : 'p'; // 'a' = atual, 'p' = p
    		Complexo[] coefsSub = new Complexo[Math.max(grau(), p.grau()) + 1]; // cria um vetor com o tamanho do polinomio com maior grau
-		
-		for (int i = 0; i <= Math.max(grau(), p.grau()); i++) { // percorre ate a maior posicao do polinomio com maior grau
-			if (i <= grau() && i <= p.grau()) // se o i for igual ou menor que o grau
+   		boolean ehPrimeiraPos = true; // se estamos na primeira pos do polinomio
+   		int skippedPos = 0; // n de vezes que apagamos uma pos da array por ser 0 na primeira pos
+   		
+		for (int i = Math.max(grau(), p.grau()); i >= 0; i--) { // percorre desde o maior grau ate 0
+			if (i <= grau() && i <= p.grau()) { // se o i for igual ou menor que os dois graus
 				coefsSub[i] = ((ComplexoConcreto) this.coef(i)).subtraccao(p.coef(i)); // fazer normalmente a subtraccao
-			else { 
+				// se a sub for 0 e se estiver na primeira pos da array
+				if((coefsSub[i].ehZero() || coefsSub[i] == null)  && ehPrimeiraPos)
+	                skippedPos++; // incrementra o numero de pos apagadas
+	            else
+	                ehPrimeiraPos = false;
+			} else { 
 				switch (grauMaior) { // caso contrario ir verificar se
 				case 'a': // o atual eh o de maior grau
 					coefsSub[i] = this.coef(i); // e colocar esse na posicao i
+					if((coefsSub[i].ehZero() || coefsSub[i] == null)  && ehPrimeiraPos)
+		                skippedPos++; // incrementra o numero de pos apagadas
+		            else
+		                ehPrimeiraPos = false;
 					break;
 				case 'p': // ou se o p eh o de maior grau
 					coefsSub[i] = ((ComplexoConcreto) p.coef(i)).simetrico(); // e colocar o seu simetrico na posicao i
+					if((coefsSub[i].ehZero() || coefsSub[i] == null)  && ehPrimeiraPos)
+		                skippedPos++; // incrementra o numero de pos apagadas
+					else
+		                ehPrimeiraPos = false;
 					break;
 				}
 			}
 		}
+		if (skippedPos > 0)
+			coefsSub = Arrays.copyOf(coefsSub, coefsSub.length-skippedPos+1); // apagar as primeiras pos da array que sao 0
 		return new PolinomioVetor(coefsSub);
 	}
 	
@@ -120,20 +154,21 @@ public final class PolinomioVetor implements Polinomio {
    		Complexo[] coefsProd = new Complexo[grau() + p.grau() + 1]; // cria um vetor com tamanho da soma dos graus dos dois polimonios +1
    		boolean ehPrimeiraPos = true; // se estamos na primeira pos do polinomio
    		int skippedPos = 0; // n de vezes que apagamos uma pos da array por ser 0 na primeira pos
-		for (int i = 0; i <= this.grau(); i++) { // percorre ate a maior posicao do polinomio atual
-			for (int j = 0 ; j <= p.grau(); j++) {
+		for (int i = this.grau(); i >= 0; i--) { // percorre ate a maior posicao do polinomio atual
+			for (int j = p.grau() ; j >= 0; j--) {
 				// se for a primeira vez a passar na array coefsProd estara a null, encher de complexos 0
-				if (coefsProd[i + j - skippedPos] == null)
-					coefsProd[i + j - skippedPos] = new ComplexoConcreto(0, 0);
-				coefsProd[i + j - skippedPos] = coefsProd[i + j - skippedPos].soma(this.coef(i).produto(p.coef(j)));
-				// se o produto for 0, se estiver na primeira pos da array e se nao for de grau 0
-				if (coefsProd[i + j - skippedPos].ehZero() && ehPrimeiraPos && coefsProd.length != 1) {
-					arrayDelFirstPos(coefsProd); // apaga a primeira pos
+				if (coefsProd[i + j] == null)
+					coefsProd[i + j] = new ComplexoConcreto(0, 0);
+				coefsProd[i + j] = coefsProd[i + j].soma(this.coef(i).produto(p.coef(j)));
+				// se o produto for 0 e se estiver na primeira pos da array
+				if ((coefsProd[i + j].ehZero() || coefsProd[i + j] == null)  && ehPrimeiraPos) {
 					skippedPos++; // incrementra o numero de pos apagadas
 				} else
 					ehPrimeiraPos = false;
 			}
 		}
+		if (skippedPos > 0)
+			coefsProd = Arrays.copyOf(coefsProd, coefsProd.length-skippedPos+1); // apagar as primeiras pos da array que sao 0
 		return new PolinomioVetor(coefsProd);
 	}
 
@@ -149,15 +184,15 @@ public final class PolinomioVetor implements Polinomio {
 
 	@Override
 	public Polinomio derivada() {
-		Complexo[] der = new Complexo[coefs.length];
-		if (coefs.length > 1) {
-			der = Arrays.copyOf(coefs, coefs.length - 1);
-			for(int i = this.grau(); i >= 0; i--) {
-				der[i] = der[i].produto(new ComplexoConcreto(i, i));
-			}
-		} else {
-			arrayDelFirstPos(der);
+		Complexo[] der = Arrays.copyOf(coefs, coefs.length); // copia do vetor de coeficientes
+		der[0] = new ComplexoConcreto(0, 0); // derivada de uma constante = 0
+		
+		if (der.length == 1)
 			return new PolinomioVetor(der);
+		der = arrayDelFirstPos(der); // apagar a primeira pos
+		
+		for(int i = this.grau() - 1; i >= 0; i--) {
+			der[i] = der[i].produto(new ComplexoConcreto(i + 1, 0)); // derivada de x^n = n*x^(n-1)
 		}
 		return new PolinomioVetor(der);
 	}
@@ -191,23 +226,27 @@ public final class PolinomioVetor implements Polinomio {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		int grau = grau() + 1;
-		for (Complexo c : coefs) {
-			if (c == null || c.ehZero())
-				sb.append(0.0);
-			else {
-				sb.append(c.repTrigonometrica());
+		if  ((grau() == 0 && coef(0).ehZero()) || coefs == null) // se o polinomio for 0 ou null
+            return "0.0"; // retorna 0.0
+		for (int i = grau() ; i >= 0; i--) {
+			if (!coef(i).ehZero()) { // se o coeficiente for diferente de 0
+				sb.append(coef(i).repTrigonometrica()); 
 				grau--;
-			}
-			if (grau != 0)
-				sb.append(" x^" + grau + " + ");
+				if (grau > 1) // se o grau for maior que 1
+					sb.append(" x^" + grau + " + ");
+				else if (grau == 1)
+					sb.append(" x + ");
+			} else
+				grau--;
 		}
 		return sb.toString();
 	}
-	
-	private void arrayDelFirstPos(Complexo[] array) {
-		if (array.length > 1)
-		    array = Arrays.copyOf(array, array.length -1);
-		array[0] = new ComplexoConcreto(0, 0);
+	// requires: array != null
+	private Complexo[] arrayDelFirstPos(Complexo[] array) {
+		Complexo[] delArray = new Complexo[array.length - 1];
+		for (int i = 0; i < array.length-1; i++) {
+			delArray[i] = array[i+1];
+		}
+		return delArray;
 	}
-
 }

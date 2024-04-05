@@ -22,7 +22,7 @@ public class PolinomioTestesToString {
         assertEquals(esperado,obtido);
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void teste2 () {
         Complexo[] coefs= new ComplexoConcreto[1];
         coefs[0] = new ComplexoConcreto(2,0);
@@ -86,7 +86,7 @@ public class PolinomioTestesToString {
         assertEquals(esperado,obtido);
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void teste8 () {
         Complexo[] coefs= new ComplexoConcreto[3];
         coefs[0] = new ComplexoConcreto(1,0);

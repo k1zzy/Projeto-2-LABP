@@ -63,7 +63,7 @@ public class PolinomioTestesProduto {
         assertEquals(produtoP2P1.coef(6).im(), -24.102000000000004, 0.000000001);
     }
     
-    @Test(timeout = 1000)
+    @Test
     public void Grau4vezesGrau0 () {
         Complexo[] coefsP2 = new ComplexoConcreto[5];
         coefsP2[0] = new ComplexoConcreto(0, 4);

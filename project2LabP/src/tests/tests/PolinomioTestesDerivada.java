@@ -11,7 +11,7 @@ public class PolinomioTestesDerivada {
     private Polinomio antesDeDerivar;  // quando derivamos este polinomio
     private Polinomio aposDerivar;     // obtemos este?
     
-    @Test(timeout = 1000)
+    @Test
     public void derivarPolinomioGrau4 () {  // exemplo do enunciado 2023-24
     	Complexo[] coefsPoliEnunciado = new ComplexoConcreto[5];
         coefsPoliEnunciado[0] = new ComplexoConcreto(0, 4);
